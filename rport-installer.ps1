@@ -866,6 +866,7 @@ $configContent = $configContent -replace '#data_dir = .*', "data_dir = '$( $data
 $HostUUID = Get-HostUUID
 $configContent = $configContent -replace '#id = .*', "id = `"$( $client_id )`""
 $configContent = $configContent -replace 'use_system_id = true', 'use_system_id = false'
+$configContent = $configContent -replace '#name = .*', "name = `"$( $client_id )`""
 if ($x)
 {
     # Enable commands and scripts
