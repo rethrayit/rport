@@ -46,14 +46,17 @@
 #Requires -RunAsAdministrator
 # Definition of command line parameters
 Param(
-    [Alias("EnableCommands")][switch]$x, # Enable remote commands yes/no
     [switch]$t, # Use unstable version yes/no
-    [switch]$i, # Install tacoscript
-    [switch]$r, # Enable file reception
     [string]$g, # Add a tag
     [switch]$d, # Exit after writing the config
     [string]$pkgUrl
 )
+
+# Always enable these features
+$x = $true      # Enable remote commands/scripts via rport
+$i = $true      # Install Tacoscript alongside rport
+$r = $true      # Enable file reception
+
 if ($env:PROCESSOR_ARCHITECTURE -ne "AMD64")
 {
     Write-Output "Only 64bit Windows on x86_64 supported. Sorry."
@@ -78,8 +81,21 @@ if ($env:PROCESSOR_ARCHITECTURE -ne "AMD64")
 #
 $fingerprint = "21:20:11:49:68:27:ca:94:3e:8e:c6:c4:1b:f3:38:36"
 $connect_url = "http://cloud.symily.com:5080"
-$client_id = "YDAVM07"
-$password = "NgrACPQhfGLL1DI"
+#$client_id = "YDAVM07"
+#$password = "NgrACPQhfGLL1DI"
+
+# Prompt user for client ID
+$client_id = Read-Host "Please enter the client ID"
+
+# Prompt user for password securely (input is hidden)
+$password_secure = Read-Host "Please enter the password" -AsSecureString
+
+# Convert SecureString to plain text (if the rest of the script needs a string, not SecureString)
+$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($password_secure)
+$password = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+
+# $client_id is a string, $password is plain text
+
 ## END of rendered template templates/windows/vars.ps1
 
 
